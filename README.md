@@ -1,5 +1,6 @@
 # xLume
 xLume is an LED controller project built with the ESP8266. It works alongside the xLume Xbox application and connects via UART to receive commands from the 360. The following is a breakdown of the current commands that can be called to activate the different colors and modes.
+ADDED BY JFRESH: Dashlaunch plugin for live lighting via temps etc.
 
 > [!IMPORTANT]  
 > In order for xLume to function properly please ensure that you have debug output enabled in your dashlaunch launch.ini
