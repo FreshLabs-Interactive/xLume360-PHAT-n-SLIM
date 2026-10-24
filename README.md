@@ -40,10 +40,16 @@ The following commands should be passed over UART (this is done via the Xbox xLu
 <b>Setting your LED count</b></br>
 [xLume] - ledCount: 10
 
-### Demo Video:  
+### Screenshots:  
 
 <a href="https://www.youtube.com/watch?v=mztqegCKXT4">
-  <img src="Images/app_FL.png" alt="xLume Demo" width="600">
+  <img src="Images/1_color.png" alt="xLume Demo" width="600">
+  <img src="Images/2_effects.png" alt="xLume Demo" width="600">
+  <img src="Images/3_settings.png" alt="xLume Demo" width="600">
+  <img src="Images/4_smart.png" alt="xLume Demo" width="600">
+  <img src="Images/5_games.png" alt="xLume Demo" width="600">
+  <img src="Images/6_tools.png" alt="xLume Demo" width="600">
+  <img src="Images/8_modal.png" alt="xLume Demo" width="600">
 </a>
 
 ## Installation Example
