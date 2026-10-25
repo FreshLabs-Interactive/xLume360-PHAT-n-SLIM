@@ -13,6 +13,7 @@ It uses the same board and the **NEW V3 firmware**.
 ![Smart tab](Images/4_smart.png)
 ![Games tab](Images/5_games.png)
 ![Tools tab](Images/6_tools.png)
+![About tab](Images/7_about.png)
 ![Modal tab](Images/8_modal.png)
 ![Diagram](Images/diagram.png)
 SLIM CONSOLE EXAMPLE
