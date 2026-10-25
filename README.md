@@ -15,6 +15,7 @@ It uses the same board and the **NEW V3 firmware**.
 ![Tools tab](Images/6_tools.png)
 ![Modal tab](Images/8_modal.png)
 ![Diagram](Images/diagram.png)
+SLIM CONSOLE EXAMPLE
 ![Example](Images/example.png)
 
 ## What's in it
