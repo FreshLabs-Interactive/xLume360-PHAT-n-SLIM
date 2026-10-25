@@ -1,24 +1,28 @@
-# xLume 360
 
-A new Xbox 360 app and DashLaunch plugin for the [xLume](https://github.com/xhjuu/xLume) LED controller.
+
+# xLume 360 v3.0.0
+
+<sub>Redesigned By FreshLabs Interactive</sub>
+
+A new Xbox 360 app and DashLaunch plugin for the [xLume](https://github.com/Element18592/xLume)(https://github.com/xhjuu/xLume) LED controller.
 It uses the same board and the **NEW V3 firmware**.
 
 ![Color tab](Images/1_color.png)
-![Color tab](Images/2_effects.png)
-![Color tab](Images/3_settings.png)
-![Color tab](Images/4_smart.png)
-![Color tab](Images/5_games.png)
-![Color tab](Images/6_tools.png)
-![Color tab](Images/8_modal.png)
-![Color tab](Images/diagram.png)
-![Color tab](Images/example.png)
+![Effects tab](Images/2_effects.png)
+![Settings tab](Images/3_settings.png)
+![Smart tab](Images/4_smart.png)
+![Games tab](Images/5_games.png)
+![Tools tab](Images/6_tools.png)
+![Modal tab](Images/8_modal.png)
+![Diagram](Images/diagram.png)
+![Example](Images/example.png)
 
 ## What's in it
 
 | | Original app | xLume 360 |
 |---|---|---|
 | Colour picking | RGB sliders | RGB **and** HSV sliders, hex code entry, 8 favourite swatches, swap primary/secondary |
-| Effects | 23 effects (V2) | All 23, with a live animated preview ring |
+| Effects | 23 effects (V2 & V3) | All 23, with a live animated preview ring |
 | Settings | Brightness, speed, LED count | Same, plus a **power limit** that caps brightness to stay under a current budget |
 | Runs when | Only while the app is open | A **background plugin** keeps working in games and on the dashboard |
 | Temperature colour | – | Strip colour follows CPU/GPU temperature (cool → hot), dashboard-only or always |
@@ -29,7 +33,7 @@ It uses the same board and the **NEW V3 firmware**.
 | Setup check | README tells you to edit launch.ini | **Tools** tab checks `debugout`, fixes it, and adds the plugin to `launch.ini` (with a `.bak` backup) |
 | Wiring test | – | Red → green → blue → white test, then back to your look |
 
-
+**Screenshots of every tab are in `Images`.**
 
 ## How it talks to the board
 
@@ -44,7 +48,7 @@ Decoded from `Firmware/xLumeV2.bin` (the firmware's own parser was disassembled)
 The console prints these with `DbgPrint`; DashLaunch sends that out of the debug UART when
 `debugout = true`. The board's TX-only wire means nothing can be read back from it.
 
-**Flash wear, and why some features are rate-limited.** The V2 firmware saves its state to
+**Flash wear, and why some features are rate-limited.** The V3 firmware saves its state to
 flash ~3 seconds after the last change (that's why your look survives a power cycle). Every
 lasting change is one flash write, so:
 - temperature colours change at most once a minute (configurable, minimum 30 s) and use
@@ -52,7 +56,6 @@ lasting change is one flash write, so:
 - the playlist interval is at least 10 minutes;
 - event flashes and the wiring test last under 2.5 s and then restore the exact previous look,
   so the firmware sees "nothing changed" and doesn't write at all.
-
 
 
 
@@ -103,18 +106,8 @@ presses, so turn shortcuts off on the Smart tab if one of your games uses BACK +
 | `launch.ini.bak` | App | Your previous `launch.ini`, saved before every edit. |
 
 
-
-## Status and limits
-
-
-- No achievement flash: achievement toasts come from inside XAM and can't be detected reliably
-  without patching version-specific addresses.
-- No shutdown fade: the board runs from the "5V Active" rail, which drops as the console powers
-  off, so there's no reliable moment for a fade.
-- Zones/segments, colour-order (GRB/RGB) and a hard current limit would need new firmware.
-  The power limit here works by capping the brightness the console sends.
-
 ## Credits
 
-xLume hardware and firmware by Element18592 and xhjuu (MIT). UI font: Poppins by Indian Type
+xLume 360 v3.0.0 redesigned by FreshLabs Interactive. The original xLume (v1 and v2), its
+hardware and firmware are by Element18592 and xhjuu (MIT). UI font: Poppins by Indian Type
 Foundry, SIL Open Font License 1.1, rendered into a bitmap atlas.
