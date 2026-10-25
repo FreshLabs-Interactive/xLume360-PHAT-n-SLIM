@@ -1,67 +1,120 @@
-# xLume
-xLume is an LED controller project built with the ESP8266. It works alongside the xLume Xbox application and connects via UART to receive commands from the 360. The following is a breakdown of the current commands that can be called to activate the different colors and modes.
-ADDED BY JFRESH: Dashlaunch plugin for live lighting via temps etc.
+# xLume 360
 
-> [!IMPORTANT]  
-> In order for xLume to function properly please ensure that you have debug output enabled in your dashlaunch launch.ini
-> 
-> debugout = true
- 
-The following commands should be passed over UART (this is done via the Xbox xLume app). The first is the main commmand and passes a color to the controller/LEDs which serves as a basis for most of the effects below. In this example we're setting the R, G, B value to Blue at full brightness.<br><br>
-<b>(Set Color)</b><br>
-[xLume] - 0, 0, 255 <br>
+A new Xbox 360 app and DashLaunch plugin for the [xLume](https://github.com/xhjuu/xLume) LED controller.
+It uses the same board and the **existing V2 firmware**; nothing needs reflashing.
 
-<b>(Static Color)</b><br>
-[xLume] - Effects: 0<br>
+![Color tab](Images/1_color.png)
+![Color tab](Images/2_effects.png)
+![Color tab](Images/3_settings.png)
+![Color tab](Images/4_smart.png)
+![Color tab](Images/5_games.png)
+![Color tab](Images/6_tools.png)
+![Color tab](Images/8_modal.png)
+![Color tab](Images/diagram.png)
+![Color tab](Images/example.png)
 
-<b>(Static Gradient)</b><br>
-[xLume] - Effects: 1<br>
+## What's in it
 
-<b>(Static Pulse)</b><br>
-[xLume] - Effects: 2<br>
+| | Original app | xLume 360 |
+|---|---|---|
+| Colour picking | RGB sliders | RGB **and** HSV sliders, hex code entry, 8 favourite swatches, swap primary/secondary |
+| Effects | 23 effects (V2) | All 23, with a live animated preview ring |
+| Settings | Brightness, speed, LED count | Same, plus a **power limit** that caps brightness to stay under a current budget |
+| Runs when | Only while the app is open | A **background plugin** keeps working in games and on the dashboard |
+| Temperature colour | – | Strip colour follows CPU/GPU temperature (cool → hot), dashboard-only or always |
+| Per-game looks | – | Each game can have its own colour/effect/brightness; switches automatically |
+| Event flashes | – | Flash on controller connect/disconnect, profile sign-in, game start |
+| In-game shortcuts | – | Hold **BACK** + d-pad: change effect / brightness, RS click = off/on, LS click = reset |
+| Effect playlist | – | Rotates through chosen effects every N minutes (in order or shuffled) |
+| Setup check | README tells you to edit launch.ini | **Tools** tab checks `debugout`, fixes it, and adds the plugin to `launch.ini` (with a `.bak` backup) |
+| Wiring test | – | Red → green → blue → white test, then back to your look |
 
-<b>(Static Twinkle)</b><br>
-[xLume] - Effects: 3<br>
 
-<b>(Turn off LEDs)</b><br>
-[xLume] - Effects: 4<br>
 
-<b>(Color Wave)</b><br>
-[xLume] - Effects: 5<br>
+## How it talks to the board
 
-<b>(Color Cycle)</b><br>
-[xLume] - Effects: 6<br>
+Decoded from `Firmware/xLumeV2.bin` (the firmware's own parser was disassembled), so it's exact:
 
-<b>(Dynamic Pulse)</b><br>
-[xLume] - Effects: 7<br>
+```
+[xLume] - Color: r, g, b        [xLume] - Brightness: 0-255
+[xLume] - Color2: r, g, b       [xLume] - Speed: 1-255
+[xLume] - Effects: 0-22         [xLume] - ledCount: 1-300
+```
 
-<b>(Dynamic Twinkle)</b><br>
-[xLume] - Effects: 8<br>
+The console prints these with `DbgPrint`; DashLaunch sends that out of the debug UART when
+`debugout = true`. The board's TX-only wire means nothing can be read back from it.
 
-<b>Setting your LED count</b></br>
-[xLume] - ledCount: 10
+**Flash wear, and why some features are rate-limited.** The V2 firmware saves its state to
+flash ~3 seconds after the last change (that's why your look survives a power cycle). Every
+lasting change is one flash write, so:
+- temperature colours change at most once a minute (configurable, minimum 30 s) and use
+  coarse colour steps with hysteresis;
+- the playlist interval is at least 10 minutes;
+- event flashes and the wiring test last under 2.5 s and then restore the exact previous look,
+  so the firmware sees "nothing changed" and doesn't write at all.
 
-### Screenshots:  
 
-<a href="https://www.youtube.com/watch?v=mztqegCKXT4">
-  <img src="Images/1_color.png" alt="xLume Demo" width="600">
-  <img src="Images/2_effects.png" alt="xLume Demo" width="600">
-  <img src="Images/3_settings.png" alt="xLume Demo" width="600">
-  <img src="Images/4_smart.png" alt="xLume Demo" width="600">
-  <img src="Images/5_games.png" alt="xLume Demo" width="600">
-  <img src="Images/6_tools.png" alt="xLume Demo" width="600">
-  <img src="Images/8_modal.png" alt="xLume Demo" width="600">
-</a>
 
-## Installation Example
 
-<img src="Images/example.png" alt="Installation Example" width="600">
+## Install
 
-## Simple Wiring Diagram
+1. Copy both files to `Hdd:\xLume\` (a USB stick at `Usb:\xLume\` also works if there's no HDD):
+   ```
+   Hdd:\xLume\xLume.xex
+   Hdd:\xLume\xLumePlugin.xex
+   ```
+2. Launch `xLume.xex` from Aurora/FSD/XeXMenu.
+3. Open the **Tools** tab (press RB until you get there):
+   - *Debug output*: if it's red, press A to turn `debugout` on.
+   - *xLume plugin in launch.ini*: press A to add it.
+   - Both edits keep a backup at `launch.ini.bak`.
+4. Run **Test wiring**. You should see red, green, blue, white.
+5. Set up your look, press **START** to save, reboot once so DashLaunch loads the plugin.
 
-<img src="Images/diagram.png" alt="Simple Wiring Diagram" width="600">
+The plugin does nothing until `xLume.ini` exists (that is, until you've saved from the app once), so
+installing it never changes the look your board already has.
 
-Recommended LED Strips: https://a.co/d/2hvjQGv<br>
-Recommended Programmer: https://a.co/d/huijcmV
+## Controls
 
-You can flash the firwmare with <a href="https://esp.huhn.me/">ESPWEBTool</a>
+| App | |
+|---|---|
+| LB / RB | Switch tabs |
+| D-pad / left stick | Move, adjust (hold to speed up, hold RT for big steps) |
+| A / X / Y | Actions shown in the footer for the selected row |
+| START | Save |
+| BACK | Save and return to your dashboard |
+
+| In any game (plugin) | |
+|---|---|
+| Hold BACK + d-pad left/right | Previous / next effect |
+| Hold BACK + d-pad up/down | Brightness ±12% |
+| Hold BACK + right stick click | LEDs off / on |
+| Hold BACK + left stick click | Back to the game's normal look |
+
+Shortcut changes last until the next game or dashboard switch. The game also sees these
+presses, so turn shortcuts off on the Smart tab if one of your games uses BACK + d-pad.
+
+## Files on the console
+
+| File | Written by | Purpose |
+|---|---|---|
+| `xLume\xLume.ini` | App | All settings and per-game looks. Plain text; safe to hand-edit if you keep the `[End]` section last. |
+| `xLume\titles.txt` | Plugin | Title IDs of games you've played, for the Games tab. |
+| `launch.ini.bak` | App | Your previous `launch.ini`, saved before every edit. |
+
+
+
+## Status and limits
+
+
+- No achievement flash: achievement toasts come from inside XAM and can't be detected reliably
+  without patching version-specific addresses.
+- No shutdown fade: the board runs from the "5V Active" rail, which drops as the console powers
+  off, so there's no reliable moment for a fade.
+- Zones/segments, colour-order (GRB/RGB) and a hard current limit would need new firmware.
+  The power limit here works by capping the brightness the console sends.
+
+## Credits
+
+xLume hardware and firmware by Element18592 and xhjuu (MIT). UI font: Poppins by Indian Type
+Foundry, SIL Open Font License 1.1, rendered into a bitmap atlas.
