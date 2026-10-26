@@ -4,7 +4,7 @@
 
 <sub>Redesigned By FreshLabs Interactive</sub>
 
-A new Xbox 360 app and DashLaunch plugin for the [xLume](https://github.com/Element18592/xLume)(https://github.com/xhjuu/xLume) LED controller.
+A new Xbox 360 app and DashLaunch plugin for the [xLume] (https://github.com/Element18592/xLume) (https://github.com/xhjuu/xLume) LED controller.
 It uses the same board and the **NEW V3 firmware**.
 
 ![Color tab](Images/1_color.png)
